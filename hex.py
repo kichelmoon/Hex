@@ -7,6 +7,7 @@ acronyms = "([A-Z][.][A-Z][.](?:[A-Z][.])?)"
 websites = "[.](com|net|org|io|gov)"
 
 long_sentence_length = 12
+long_word_length = 12
 
 def split_into_sentences(text):
     text = " " + text + "  "
@@ -37,8 +38,8 @@ def split_into_sentences(text):
 
 def lange_saetze(text):
 	sentences = split_into_sentences(text)
-
 	long_sentences = []
+
 	for sentence in sentences:
 		words = sentence.split()
 		number_of_words = len(words)
@@ -48,10 +49,27 @@ def lange_saetze(text):
 
 	return long_sentences
 
+def lange_worte(text):
+	words = text.split()
+	long_words = []
+
+	for word in words:
+		if len(word) > long_word_length:
+			long_words.append(word)
+
+	return long_words
+
+print("Hex analysiert deinen Text")
+
 f = open("text.txt", "r")
 file_content = f.read()
 long_sentences = lange_saetze(file_content)
+long_words = lange_worte(file_content)
 		
-print("Warnung: Lange Sätze")
+print("\nWarnung: Lange Sätze")
 for sentence in long_sentences:
 	print(sentence)
+
+print("\nWarnung: Lange Worte")
+for word in long_words:
+	print(word)
