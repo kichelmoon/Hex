@@ -37,55 +37,73 @@ def split_into_sentences(text):
 
 
 def lange_saetze(sentences):
-	long_sentences = []
+    found_long_sentences = []
 
-	for sentence in sentences:
-		words = sentence.split()
-		number_of_words = len(words)
+    for sentence in sentences:
+        words = sentence.split()
+        number_of_words = len(words)
 
-		if number_of_words > long_sentence_length:
-			long_sentences.append(sentence)
+        if number_of_words > long_sentence_length:
+            found_long_sentences.append(sentence)
 
-	return long_sentences
+    return found_long_sentences
 
 def lange_worte(words):
-	long_words = []
+    found_long_words = []
+    for word in words:
+        if len(word) > long_word_length:
+            found_long_words.append(word)
 
-	for word in words:
-		if len(word) > long_word_length:
-			long_words.append(word)
-
-	return long_words
+    return found_long_words
 
 def passiv(sentences):
-	passive_sentences = []
-	
-	passive_thingies = ["wird", "ist", "wurde", "war"]
-	for sentence in sentences:
-		words = sentence.split()
-		for word in words:
-			if word in passive_thingies:
-				passive_sentences.append(sentence)
-				
-	return passive_sentences
+    passive_thingies = ["wird", "ist", "wurde", "war"]
+    found_passive_sentences = []
+    
+    for sentence in sentences:
+        words = sentence.split()
+        for word in words:
+            if word in passive_thingies:
+                found_passive_sentences.append(sentence)
+                
+    return found_passive_sentences
 
-def fuellworte(words):
+def fuellworte(text):
     filler_file = open("filler.txt", "r")
     filler_text = filler_file.read()
-    german_filler_words = filler_text.replace(",","").split()
+    german_filler = filler_text.split()
     
-    filler_words = []
-    for word in words:
-        if word in german_filler_words:
-            filler_words.append(word)
-			
-    return filler_words
+    poly_filler_file = open("filler_poly.txt", "r")
+    poly_lines = poly_filler_file.readlines()
+    for line in poly_lines:
+        german_filler.append(line.replace("\n", ""))
+            
+    found_filler_words = []
+    for word in german_filler:
+        if word in text:
+            found_filler_words.append(word)
+            
+    return found_filler_words
+
+def abkrz(text):
+    abbr_file = open("abbr.txt", "r")
+    abbr_lines = abbr_file.readlines()
+    abbrs = []
+    for line in abbr_lines:
+        abbrs.append(line.replace("\n", ""))
+                
+    found_abbrs = []
+    for abbr in abbrs:
+        if abbr in text:
+            found_abbrs.append(abbr)
+            
+    return found_abbrs
 
 def hex_warning(warning_type, text):
-	if warning_type:
-		print("\nWarnung: " + text)
-		for item in warning_type:
-			print(item)
+    if warning_type:
+        print("\nWarnung: " + text)
+        for item in warning_type:
+            print(item)
 
 
 print("Hex analysiert deinen Text")
@@ -98,4 +116,5 @@ words = full_text.split()
 hex_warning(lange_saetze(sentences), "Lange Sätze")
 hex_warning(lange_worte(words), "Lange Wörter")
 hex_warning(passiv(sentences), "Passiv (Steven King verachtet dich!)")
-hex_warning(fuellworte(words), "Füllwörter")
+hex_warning(fuellworte(full_text), "Füllwörter")
+hex_warning(abkrz(full_text), "Abkürzungen")
