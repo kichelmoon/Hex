@@ -36,8 +36,7 @@ def split_into_sentences(text):
     return sentences
 
 
-def lange_saetze(text):
-	sentences = split_into_sentences(text)
+def lange_saetze(sentences):
 	long_sentences = []
 
 	for sentence in sentences:
@@ -59,17 +58,35 @@ def lange_worte(text):
 
 	return long_words
 
+def passiv(sentences):
+	passive_sentences = []
+	
+	passive_thingies = ["wird", "ist", "wurde", "war"]
+	for sentence in sentences:
+		words = sentence.split()
+		for word in words:
+			if word in passive_thingies:
+				passive_sentences.append(sentence)
+				
+	return passive_sentences
+				
+def hex_warning(warning_type, text):
+	if warning_type:
+		print("\nWarnung: " + text)
+		for item in warning_type:
+			print(item)
+
+
 print("Hex analysiert deinen Text")
 
 f = open("text.txt", "r")
-file_content = f.read()
-long_sentences = lange_saetze(file_content)
-long_words = lange_worte(file_content)
-		
-print("\nWarnung: Lange Sätze")
-for sentence in long_sentences:
-	print(sentence)
+full_text = f.read()
+sentences = split_into_sentences(full_text)
 
-print("\nWarnung: Lange Worte")
-for word in long_words:
-	print(word)
+long_sentences = lange_saetze(sentences)
+long_words = lange_worte(full_text)
+passive_sentences = passiv(sentences)
+
+hex_warning(long_sentences, "Lange Sätze")
+hex_warning(long_words, "Lange Wörter")
+hex_warning(passive_sentences, "Passiv (Steven King verachtet dich!)")
