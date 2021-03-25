@@ -48,8 +48,7 @@ def lange_saetze(sentences):
 
 	return long_sentences
 
-def lange_worte(text):
-	words = text.split()
+def lange_worte(words):
 	long_words = []
 
 	for word in words:
@@ -69,7 +68,19 @@ def passiv(sentences):
 				passive_sentences.append(sentence)
 				
 	return passive_sentences
-				
+
+def fuellworte(words):
+    filler_file = open("filler.txt", "r")
+    filler_text = filler_file.read()
+    german_filler_words = filler_text.replace(",","").split()
+    
+    filler_words = []
+    for word in words:
+        if word in german_filler_words:
+            filler_words.append(word)
+			
+    return filler_words
+
 def hex_warning(warning_type, text):
 	if warning_type:
 		print("\nWarnung: " + text)
@@ -82,11 +93,9 @@ print("Hex analysiert deinen Text")
 f = open("text.txt", "r")
 full_text = f.read()
 sentences = split_into_sentences(full_text)
+words = full_text.split()
 
-long_sentences = lange_saetze(sentences)
-long_words = lange_worte(full_text)
-passive_sentences = passiv(sentences)
-
-hex_warning(long_sentences, "Lange Sätze")
-hex_warning(long_words, "Lange Wörter")
-hex_warning(passive_sentences, "Passiv (Steven King verachtet dich!)")
+hex_warning(lange_saetze(sentences), "Lange Sätze")
+hex_warning(lange_worte(words), "Lange Wörter")
+hex_warning(passiv(sentences), "Passiv (Steven King verachtet dich!)")
+hex_warning(fuellworte(words), "Füllwörter")
